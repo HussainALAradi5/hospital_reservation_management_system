@@ -14,6 +14,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('countries.index') }}">Countries</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('regions.index') }}">Regions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('addresses.index') }}">Addresses</a>
+                        </li>
                     @endif
 
                     @if (in_array(Auth::user()->user_type, ['doctor', 'pharmacist', 'admin']))

@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Region extends Model
 {
-    //
+    protected $fillable = ['name', 'code'];
+
+
+    public function addresses() {
+        return $this->hasMany(Address::class);
+        }
 }

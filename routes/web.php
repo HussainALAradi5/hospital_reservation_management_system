@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\MedicineController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\UserAuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,4 +34,6 @@ Route::get('/profile', [UserAuthController::class, 'profile'])->middleware('auth
 Route::middleware(['admin'])->group(function () {
     Route::resource('countries', CountryController::class);
     Route::get('countries/sync', [CountryController::class, 'sync'])->name('countries.sync');
+    Route::resource('regions', RegionController::class);
+    Route::resource('addresses', AddressController::class);
 });
