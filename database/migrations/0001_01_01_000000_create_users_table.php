@@ -18,9 +18,10 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('age');
+            $table->integer('telephone_number');
             $table->char('gender_type');
             $table->boolean('is_married');
-            $table->enum('user_type', ['patient','doctor','nurse','pharmancy']);
+            $table->enum('user_type', ['patient','doctor','nurse','pharmancy'])->default('patient');
             $table->rememberToken();
             $table->timestamps();
         });

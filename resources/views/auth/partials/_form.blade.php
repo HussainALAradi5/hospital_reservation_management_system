@@ -9,6 +9,9 @@
 <input type="password" name="password" class="form-control mb-2" placeholder="Password"
     @if (!isset($user)) required @endif>
 
+<input type="text" name="telephone_number" class="form-control mb-2" placeholder="Telephone Number"
+    value="{{ old('telephone_number', $user->telephone_number ?? '') }}">
+
 <input type="number" name="age" class="form-control mb-2" placeholder="Age"
     value="{{ old('age', $user->age ?? '') }}" required>
 
@@ -24,11 +27,4 @@
     <option value="0" @selected(old('is_married', $user->is_married ?? '') == 0)>Single</option>
 </select>
 
-<select name="user_type" class="form-control mb-2" required>
-    <option value="">User Type</option>
-    @foreach (['patient', 'doctor', 'nurse', 'pharmancy'] as $type)
-        <option value="{{ $type }}" @selected(old('user_type', $user->user_type ?? '') === $type)>
-            {{ ucfirst($type) }}
-        </option>
-    @endforeach
-</select>
+
