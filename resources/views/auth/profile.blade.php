@@ -9,6 +9,10 @@
         <li class="list-group-item"><strong>Age:</strong> {{ $user->age }}</li>
         <li class="list-group-item"><strong>Gender:</strong> {{ $user->gender_type == 'M' ? 'Male' : 'Female' }}</li>
         <li class="list-group-item"><strong>Marital Status:</strong> {{ $user->is_married ? 'Married' : 'Single' }}</li>
-        <li class="list-group-item"><strong>User Type:</strong> {{ ucfirst($user->user_type) }}</li>
+        @auth
+            @if (Auth::user()->user_type !== 'patient')
+                <li class="list-group-item"><strong>User Type:</strong> {{ Auth::user()->user_type }}</li>
+            @endif
+        @endauth
     </ul>
 @endsection
