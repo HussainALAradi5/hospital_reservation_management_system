@@ -7,9 +7,13 @@
 </head>
 
 <body>
+    @include('layouts.partials.header')
+
     <div class="container mt-4">
         @yield('content')
     </div>
+
+    @include('layouts.partials.footer')
 </body>
 
 </html>
