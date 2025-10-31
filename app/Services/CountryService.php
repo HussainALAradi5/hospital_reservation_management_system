@@ -33,7 +33,6 @@ class CountryService
         foreach ($countries as $country) {
             $nameCommon = data_get($country, 'name.common');
             $nameOfficial = data_get($country, 'name.official');
-            dd( $nameOfficial);
             $code = data_get($country, 'cca2');
             $flagUrl = data_get($country, 'flags.png');
 
