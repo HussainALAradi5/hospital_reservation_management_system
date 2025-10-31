@@ -15,7 +15,7 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Quantity</th>
-                <th>Country</th>
+                <th>Produce Country</th>
                 <th>Actions</th>
             </tr>
         </thead>

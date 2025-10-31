@@ -17,7 +17,7 @@
         required>
 </div>
 <div class="mb-3">
-    <label>Country</label>
+    <label>Produce Country</label>
     <select name="product_country_id" class="form-control" required>
         <option value="">Select Country</option>
         @foreach ($countries as $country)
