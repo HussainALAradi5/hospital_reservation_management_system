@@ -2,7 +2,12 @@
 
 @section('content')
     <div class="text-center">
-        <h1>Welcome to the Hospital Management System</h1>
-        <p class="lead">Manage countries, medicines, and user profiles with ease.</p>
+        @auth
+            @if (Auth::user())
+                <h1>Welcome {{ Auth::user()->name }} </h1>
+            @endif
+        @else
+            <h1>Welcome Visitor!</h1>
+        @endauth
     </div>
 @endsection

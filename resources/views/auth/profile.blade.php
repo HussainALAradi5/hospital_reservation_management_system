@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h3>Your Profile</h3>
+    <h3>{{ Auth::user()->name }} Profile</h3>
     <ul class="list-group">
         <li class="list-group-item"><strong>Name:</strong> {{ $user->name }}</li>
         <li class="list-group-item"><strong>Email:</strong> {{ $user->email }}</li>

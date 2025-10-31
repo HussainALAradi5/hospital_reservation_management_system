@@ -49,7 +49,7 @@ class UserAuthController extends Controller
         $request->validate($validate_array);
         $loginField = filter_var($request->login,FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
         if (Auth::attempt([$loginField => $request->login, 'password' => $request->password])){
-            return redirect()->route('medicines.index');
+            return redirect()->route('profile');
         }
         return back()->withErrors(['login' => 'Invalid Credntials']);
     }
