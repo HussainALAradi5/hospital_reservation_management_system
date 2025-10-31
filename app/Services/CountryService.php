@@ -31,21 +31,22 @@ class CountryService
         $inserted = 0;
 
         foreach ($countries as $country) {
-            if (
-                !isset($country['name']['common']) ||
-                !isset($country['name']['official']) ||
-                !isset($country['cca2']) ||
-                !isset($country['flags']['png'])
-            ) {
+            $nameCommon = data_get($country, 'name.common');
+            $nameOfficial = data_get($country, 'name.official');
+            dd( $nameOfficial);
+            $code = data_get($country, 'cca2');
+            $flagUrl = data_get($country, 'flags.png');
+
+            if (!($nameCommon && $nameOfficial && $code && $flagUrl)) {
                 continue;
             }
 
             Country::updateOrCreate(
-                ['code' => $country['cca2']],
+                ['code' => $code],
                 [
-                    'name' => $country['name']['common'],
-                    'official_name' => $country['name']['official'],
-                    'flag_url' => $country['flags']['png'],
+                    'name' => $nameCommon,
+                    'official_name' => $nameOfficial,
+                    'flag_url' => $flagUrl,
                 ]
             );
 
