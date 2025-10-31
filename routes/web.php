@@ -28,3 +28,8 @@ Route::post('/register', [UserAuthController::class, 'register'])->name('auth.re
 Route::post('/logout', [UserAuthController::class, 'logout'])->name('auth.logout');
 
 Route::get('/profile', [UserAuthController::class, 'profile'])->middleware('auth')->name('profile');
+
+Route::middleware(['admin'])->group(function () {
+    Route::resource('countries', CountryController::class);
+    Route::get('countries/sync', [CountryController::class, 'sync'])->name('countries.sync');
+});

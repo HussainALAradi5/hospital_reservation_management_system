@@ -8,14 +8,20 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('countries.index') }}">Countries</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('medicines.index') }}">Medicines</a>
-                </li>
 
                 @auth
+                    @if (Auth::user()->user_type === 'admin')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('countries.index') }}">Countries</a>
+                        </li>
+                    @endif
+
+                    @if (in_array(Auth::user()->user_type, ['doctor', 'pharmacist', 'admin']))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('medicines.index') }}">Medicines</a>
+                        </li>
+                    @endif
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('profile') }}">Profile</a>
                     </li>
@@ -33,6 +39,7 @@
                         <a class="nav-link" href="{{ route('login') }}">Login</a>
                     </li>
                 @endauth
+
             </ul>
         </div>
     </div>
