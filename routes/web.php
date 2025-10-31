@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,4 +39,9 @@ Route::middleware(['admin'])->group(function () {
     Route::get('countries/sync', [CountryController::class, 'sync'])->name('countries.sync');
     Route::resource('regions', RegionController::class);
     Route::resource('addresses', AddressController::class);
+    Route::resource('hospitals', HospitalController::class);
+    Route::resource('rooms', RoomController::class);
+    Route::resource('users', UserController::class)->only(['index', 'create', 'store']);
+
+
 });

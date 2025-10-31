@@ -17,15 +17,9 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'telephone_number',
-    'age',
-    'gender_type',
-    'is_married',
-    'user_type',
+  protected $fillable = [
+    'name', 'email', 'password', 'telephone_number', 'age',
+    'gender_type', 'is_married', 'user_type', 'hospital_id'
 ];
 
     /**
@@ -50,4 +44,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function hospital()
+{
+    return $this->belongsTo(Hospital::class);
+}
+
 }
