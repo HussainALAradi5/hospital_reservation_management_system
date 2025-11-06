@@ -17,6 +17,7 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('hospitals.index') }}">Hospitals</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('rooms.index') }}">Rooms</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}">Users</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('medicine_companies.index') }}">Companies</a></li>
                     @endif
 
                     @if (in_array(Auth::user()->user_type, ['doctor', 'pharmacist', 'admin']))
