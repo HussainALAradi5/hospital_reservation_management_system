@@ -8,6 +8,7 @@
         <li><strong>Description:</strong> {{ $medicine->description }}</li>
         <li><strong>Quantity:</strong> {{ $medicine->quantity }}</li>
         <li><strong>Country:</strong> {{ $medicine->country->name ?? 'N/A' }}</li>
+        <li><strong>Country:</strong> {{ $medicine->company->name ?? 'N/A' }}</li>
     </ul>
     <a href="{{ route('medicines.index') }}" class="btn btn-secondary">Back</a>
 @endsection

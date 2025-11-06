@@ -9,7 +9,7 @@
 
         <div class="mb-3">
             <label>Code</label>
-            <input type="text" name="code" class="form-control" value="{{ $room->code }}" required>
+            <input type="text" name="code" class="form-control" value="{{ old('code', $room->code) }}" required>
         </div>
 
         <div class="mb-3">
@@ -22,8 +22,8 @@
 
         <div class="mb-3">
             <label>Capacity</label>
-            <input type="number" name="capacity" class="form-control" value="{{ $room->capacity }}" required
-                min="1">
+            <input type="number" name="capacity" class="form-control" value="{{ old('capacity', $room->capacity) }}"
+                required min="1">
         </div>
 
         <div class="mb-3">

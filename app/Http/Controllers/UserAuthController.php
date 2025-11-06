@@ -25,18 +25,11 @@ class UserAuthController extends Controller
     'hospital_id' => 'nullable|exists:hospitals,id',
         ];
 
-    if (!in_array($request->user_type, ['admin', 'patient'])) {
-        $validata_array['hospital_id'] = 'nullable|exists:hospitals,id';
-    }
-
     $request->validate($validata_array);
-
     $user_array = $request->only(array_keys($validata_array));
     $user_array['password'] = bcrypt($user_array['password']);
-
     User::create($user_array);
-
-        return redirect()->route('login')->with('success', 'Registration successful. You can now log in.');
+    return redirect()->route('login')->with('success', 'Registration successful. You can now log in.');
 
     }
 

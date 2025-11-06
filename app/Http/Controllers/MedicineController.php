@@ -2,33 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Country;
 use App\Models\Medicine;
+use App\Models\Country;
+use App\Models\MedicineCompany;
 use Illuminate\Http\Request;
 
 class MedicineController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $medicines = Medicine::with('country')->get();
+        $medicines = Medicine::with(['country', 'company'])->get();
         return view('medicines.index', compact('medicines'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $countries = Country::all();
-        return view('medicines.create', compact('countries'));
+        $companies = MedicineCompany::all();
+        return view('medicines.create', compact('countries', 'companies'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -37,6 +30,7 @@ class MedicineController extends Controller
             'description' => 'required|string',
             'quantity' => 'required|integer|min:0',
             'product_country_id' => 'required|exists:countries,id',
+            'medicine_company_id' => 'nullable|exists:medicine_companies,id',
         ]);
 
         Medicine::create($request->all());
@@ -44,26 +38,18 @@ class MedicineController extends Controller
         return redirect()->route('medicines.index')->with('success', 'Medicine added successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Medicine $medicine)
     {
         return view('medicines.show', compact('medicine'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Medicine $medicine)
     {
         $countries = Country::all();
-        return view('medicines.edit', compact('medicine', 'countries'));
+        $companies = MedicineCompany::all();
+        return view('medicines.edit', compact('medicine', 'countries', 'companies'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Medicine $medicine)
     {
         $request->validate([
@@ -72,6 +58,7 @@ class MedicineController extends Controller
             'description' => 'required|string',
             'quantity' => 'required|integer|min:0',
             'product_country_id' => 'required|exists:countries,id',
+            'medicine_company_id' => 'nullable|exists:medicine_companies,id',
         ]);
 
         $medicine->update($request->all());
@@ -79,9 +66,6 @@ class MedicineController extends Controller
         return redirect()->route('medicines.index')->with('success', 'Medicine updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Medicine $medicine)
     {
         $medicine->delete();

@@ -15,6 +15,25 @@ class RoomController extends Controller
         return view('rooms.index', compact('rooms'));
     }
 
+    public function filter(Request $request)
+    {
+        $status = $request->get('status');
+        $type = $request->get('type');
+
+        $query = Room::with('hospital', 'medicalStaff');
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        if ($type) {
+            $query->where('type', $type);
+        }
+
+        $rooms = $query->get();
+        return view('rooms.index', compact('rooms'));
+    }
+
     public function create()
     {
         $hospitals = Hospital::all();
@@ -73,6 +92,18 @@ class RoomController extends Controller
         ]));
 
         return redirect()->route('rooms.index')->with('success', 'Room updated successfully.');
+    }
+
+    public function release(Room $room)
+    {
+        if ($room->type === 'doctor_season') {
+            $room->update([
+                'status' => 'free',
+                'medical_staff_id' => null,
+            ]);
+        }
+
+        return redirect()->route('rooms.index')->with('success', 'Room released.');
     }
 
     public function destroy(Room $room)

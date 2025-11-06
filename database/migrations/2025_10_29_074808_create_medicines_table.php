@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('quantity');
             $table->foreignId('product_country_id')->constrained('countries')->onDelete('cascade');
             $table->timestamps();
+             $table->foreignId('medicine_company_id')->nullable()->constrained()->onDelete('set null');
+
         });
     }
 

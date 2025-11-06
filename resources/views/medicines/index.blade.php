@@ -17,6 +17,7 @@
                 <th>Quantity</th>
                 <th>Produce Country</th>
                 <th>Actions</th>
+                <th>Company</th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +28,7 @@
                     <td>{{ $medicine->description }}</td>
                     <td>{{ $medicine->quantity }}</td>
                     <td>{{ $medicine->country->name ?? 'N/A' }}</td>
+                    <td>{{ $medicine->company->name ?? 'N/A' }}</td>
                     <td>
                         <a href="{{ route('medicines.show', $medicine) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('medicines.edit', $medicine) }}" class="btn btn-warning btn-sm">Edit</a>

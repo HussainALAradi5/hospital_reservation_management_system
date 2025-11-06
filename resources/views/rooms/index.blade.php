@@ -2,7 +2,29 @@
 
 @section('content')
     <h2>All Rooms</h2>
-    <a href="{{ route('rooms.create') }}" class="btn btn-primary mb-3">Add Room</a>
+
+    <form method="GET" action="{{ route('rooms.filter') }}" class="row g-2 mb-4">
+        <div class="col-md-3">
+            <select name="status" class="form-control">
+                <option value="">— Filter by Status —</option>
+                <option value="free">Free</option>
+                <option value="occupied">Occupied</option>
+                <option value="maintenance">Maintenance</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="type" class="form-control">
+                <option value="">— Filter by Type —</option>
+                <option value="doctor_season">Doctor Season</option>
+                <option value="treatment">Treatment</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </form>
+
+    <a href="{{ route('rooms.create') }}" class="btn btn-success mb-3">Add Room</a>
 
     <table class="table">
         <thead>
@@ -32,6 +54,12 @@
                             <button type="submit" class="btn btn-sm btn-danger"
                                 onclick="return confirm('Delete this room?')">Delete</button>
                         </form>
+                        @if ($room->status === 'occupied' && $room->type === 'doctor_season')
+                            <form method="POST" action="{{ route('rooms.release', $room) }}" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Release</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach
