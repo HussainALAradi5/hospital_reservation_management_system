@@ -23,7 +23,13 @@
                 <tr>
                     <td>{{ $company->name }}</td>
                     <td>{{ $company->code }}</td>
-                    <td>{{ $company->country->name ?? 'N/A' }}</td>
+                    <td>
+                   
+                       @if ($company->country && $company->country->flag_url)
+                           <img src="{{ $company->country->flag_url }}" alt="Flag" class="ms-2 img-thumbnail"               style="max-width: 30px;">
+                       @endif
+                           {{ $company->country->name ?? 'N/A' }}
+                    </td>
                     <td>{{ $company->address->street ?? 'N/A' }}</td>
                     <td>
                         <a href="{{ route('medicine_companies.show', $company) }}" class="btn btn-info btn-sm">View</a>

@@ -1,12 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>Address Details</h2>
+    <div class="container">
+        <h2 class="mb-4">Address Details</h2>
 
-    <p><strong>Code:</strong> {{ $address->code }}</p>
-    <p><strong>Region:</strong> {{ $address->region->name }}</p>
-    <p><strong>Street:</strong> {{ $address->street }}</p>
-    <p><strong>Road:</strong> {{ $address->road }}</p>
-    <p><strong>Building:</strong> {{ $address->building }}</p>
-    <p><strong>Block:</strong> {{ $address->block }}</p>
+        <table class="table table-bordered table-striped w-75 mx-auto">
+            <tbody>
+                <tr>
+                    <th scope="row" style="width: 30%">Code</th>
+                    <td>{{ $address->code }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Region</th>
+                    <td>{{ $address->region->name }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Street</th>
+                    <td>{{ $address->street }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Road</th>
+                    <td>{{ $address->road }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Building</th>
+                    <td>{{ $address->building }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Block</th>
+                    <td>{{ $address->block }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center mt-4">
+            <a href="{{ route('addresses.index') }}" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
 @endsection
