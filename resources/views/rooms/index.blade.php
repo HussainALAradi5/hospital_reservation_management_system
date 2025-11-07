@@ -26,15 +26,14 @@
 
     <a href="{{ route('rooms.create') }}" class="btn btn-success mb-3">Add Room</a>
 
-    <table class="table">
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Code</th>
+                <th>Name</th>
                 <th>Type</th>
-                <th>Capacity</th>
                 <th>Status</th>
                 <th>Hospital</th>
-                <th>Occupied By</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -42,13 +41,13 @@
             @foreach ($rooms as $room)
                 <tr>
                     <td>{{ $room->code }}</td>
+                    <td>{{ $room->name }}</td>
                     <td>{{ ucfirst(str_replace('_', ' ', $room->type)) }}</td>
-                    <td>{{ $room->capacity }}</td>
                     <td>{{ ucfirst($room->status) }}</td>
                     <td>{{ $room->hospital->name ?? '—' }}</td>
-                    <td>{{ $room->medicalStaff->name ?? '—' }}</td>
                     <td>
                         <a href="{{ route('rooms.edit', $room) }}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{{ route('rooms.show', $room) }}" class="btn btn-sm btn-info">View</a>
                         <form action="{{ route('rooms.destroy', $room) }}" method="POST" style="display:inline;">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger"

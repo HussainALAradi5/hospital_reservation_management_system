@@ -7,8 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Room extends Model
 {
     protected $fillable = [
-        'code', 'type', 'capacity', 'hospital_id',
-        'status', 'medical_staff_id'
+        'code', 'name', 'type', 'status', 'hospital_id',
+        'medical_staff_ids', 'last_sign_in_user_ids', 'sign_out_user_ids'
+    ];
+
+    protected $casts = [
+        'medical_staff_ids' => 'array',
+        'last_sign_in_user_ids' => 'array',
+        'sign_out_user_ids' => 'array',
     ];
 
     public function hospital()
@@ -18,7 +24,16 @@ class Room extends Model
 
     public function medicalStaff()
     {
-        return $this->belongsTo(User::class, 'medical_staff_id')
-            ->whereNotIn('user_type', ['admin', 'patient']);
+        return User::whereIn('id', $this->medical_staff_ids ?? [])->get();
+    }
+
+    public function lastSignInUsers()
+    {
+        return User::whereIn('id', $this->last_sign_in_user_ids ?? [])->get();
+    }
+
+    public function signOutUsers()
+    {
+        return User::whereIn('id', $this->sign_out_user_ids ?? [])->get();
     }
 }

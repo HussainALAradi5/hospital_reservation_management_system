@@ -11,23 +11,20 @@ class RoomController extends Controller
 {
     public function index()
     {
-        $rooms = Room::with('hospital', 'medicalStaff')->get();
+        $rooms = Room::with('hospital')->get();
         return view('rooms.index', compact('rooms'));
     }
 
     public function filter(Request $request)
     {
-        $status = $request->get('status');
-        $type = $request->get('type');
+        $query = Room::with('hospital');
 
-        $query = Room::with('hospital', 'medicalStaff');
-
-        if ($status) {
-            $query->where('status', $status);
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
-        if ($type) {
-            $query->where('type', $type);
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
         }
 
         $rooms = $query->get();
@@ -45,21 +42,34 @@ class RoomController extends Controller
     {
         $request->validate([
             'code' => 'required|string|max:50',
+            'name' => 'required|string|max:255',
             'type' => 'required|in:doctor_season,treatment',
-            'capacity' => 'required|integer|min:1',
+            'status' => 'nullable|in:free,occupied,maintenance',
             'hospital_id' => 'required|exists:hospitals,id',
-            'status' => 'required|in:free,occupied,maintenance',
-            'medical_staff_id' => 'nullable|exists:users,id',
+            'medical_staff_ids' => 'nullable|array',
+            'medical_staff_ids.*' => 'exists:users,id',
         ]);
 
-        if ($request->status === 'occupied' && !$request->medical_staff_id) {
-            return back()->withErrors(['medical_staff_id' => 'Required when room is occupied.'])->withInput();
-        }
+        $staffIds = $request->medical_staff_ids ?? [];
+        $signIns = collect($staffIds)->map(fn($id) => [
+            'user_id' => $id,
+            'timestamp' => now()->toDateTimeString()
+        ])->toArray();
 
-        Room::create($request->only([
-            'code', 'type', 'capacity', 'hospital_id',
-            'status', 'medical_staff_id'
-        ]));
+        $status = $request->status === 'maintenance'
+            ? 'maintenance'
+            : (empty($staffIds) ? 'free' : 'occupied');
+
+        Room::create([
+            'code' => $request->code,
+            'name' => $request->name,
+            'type' => $request->type,
+            'status' => $status,
+            'hospital_id' => $request->hospital_id,
+            'medical_staff_ids' => $staffIds,
+            'last_sign_ins' => $signIns,
+            'sign_outs' => [],
+        ]);
 
         return redirect()->route('rooms.index')->with('success', 'Room created successfully.');
     }
@@ -75,35 +85,106 @@ class RoomController extends Controller
     {
         $request->validate([
             'code' => 'required|string|max:50',
+            'name' => 'required|string|max:255',
             'type' => 'required|in:doctor_season,treatment',
-            'capacity' => 'required|integer|min:1',
+            'status' => 'nullable|in:free,occupied,maintenance',
             'hospital_id' => 'required|exists:hospitals,id',
-            'status' => 'required|in:free,occupied,maintenance',
-            'medical_staff_id' => 'nullable|exists:users,id',
+            'medical_staff_ids' => 'nullable|array',
+            'medical_staff_ids.*' => 'exists:users,id',
         ]);
 
-        if ($request->status === 'occupied' && !$request->medical_staff_id) {
-            return back()->withErrors(['medical_staff_id' => 'Required when room is occupied.'])->withInput();
-        }
+        $newStaff = $request->medical_staff_ids ?? [];
+        $oldStaff = $room->medical_staff_ids ?? [];
 
-        $room->update($request->only([
-            'code', 'type', 'capacity', 'hospital_id',
-            'status', 'medical_staff_id'
-        ]));
+        $signOuts = collect($oldStaff)->map(fn($id) => [
+            'user_id' => $id,
+            'timestamp' => now()->toDateTimeString()
+        ])->toArray();
+
+        $signIns = collect($newStaff)->map(fn($id) => [
+            'user_id' => $id,
+            'timestamp' => now()->toDateTimeString()
+        ])->toArray();
+
+        $status = $request->status === 'maintenance'
+            ? 'maintenance'
+            : (empty($newStaff) ? 'free' : 'occupied');
+
+        $room->update([
+            'code' => $request->code,
+            'name' => $request->name,
+            'type' => $request->type,
+            'status' => $status,
+            'hospital_id' => $request->hospital_id,
+            'medical_staff_ids' => $newStaff,
+            'last_sign_ins' => $signIns,
+            'sign_outs' => array_merge($room->sign_outs ?? [], $signOuts),
+        ]);
 
         return redirect()->route('rooms.index')->with('success', 'Room updated successfully.');
     }
 
     public function release(Room $room)
     {
-        if ($room->type === 'doctor_season') {
-            $room->update([
-                'status' => 'free',
-                'medical_staff_id' => null,
-            ]);
+        if ($room->type !== 'doctor_season') {
+            return back()->withErrors(['type' => 'Only doctor season rooms can be released.']);
         }
 
-        return redirect()->route('rooms.index')->with('success', 'Room released.');
+        if ($room->status !== 'occupied') {
+            return back()->withErrors(['status' => 'Room is not occupied.']);
+        }
+
+        if (empty($room->medical_staff_ids)) {
+            return back()->withErrors(['medical_staff_ids' => 'No staff assigned to release.']);
+        }
+
+        $signOuts = collect($room->medical_staff_ids)->map(fn($id) => [
+            'user_id' => $id,
+            'timestamp' => now()->toDateTimeString()
+        ])->toArray();
+
+        $room->update([
+            'status' => 'free',
+            'medical_staff_ids' => [],
+            'last_sign_ins' => [],
+            'sign_outs' => array_merge($room->sign_outs ?? [], $signOuts),
+        ]);
+
+        return redirect()->route('rooms.index')->with('success', 'Room released successfully.');
+    }
+
+    public function replaceDoctor(Request $request, Room $room)
+    {
+        if ($room->type !== 'doctor_season') {
+            return back()->withErrors(['type' => 'Only doctor season rooms can be reassigned.']);
+        }
+
+        $request->validate([
+            'new_medical_staff_ids' => 'required|array',
+            'new_medical_staff_ids.*' => 'exists:users,id',
+        ]);
+
+        $newStaff = $request->new_medical_staff_ids;
+        $oldStaff = $room->medical_staff_ids ?? [];
+
+        $signOuts = collect($oldStaff)->map(fn($id) => [
+            'user_id' => $id,
+            'timestamp' => now()->toDateTimeString()
+        ])->toArray();
+
+        $signIns = collect($newStaff)->map(fn($id) => [
+            'user_id' => $id,
+            'timestamp' => now()->toDateTimeString()
+        ])->toArray();
+
+        $room->update([
+            'medical_staff_ids' => $newStaff,
+            'last_sign_ins' => $signIns,
+            'sign_outs' => array_merge($room->sign_outs ?? [], $signOuts),
+            'status' => 'occupied',
+        ]);
+
+        return redirect()->route('rooms.index')->with('success', 'Doctor(s) replaced successfully.');
     }
 
     public function destroy(Room $room)

@@ -12,6 +12,11 @@
         </div>
 
         <div class="mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
             <label>Type</label>
             <select name="type" class="form-control" required>
                 <option value="doctor_season">Doctor Season</option>
@@ -20,8 +25,12 @@
         </div>
 
         <div class="mb-3">
-            <label>Capacity</label>
-            <input type="number" name="capacity" class="form-control" required min="1">
+            <label>Status</label>
+            <select name="status" class="form-control">
+                <option value="free">Free</option>
+                <option value="occupied">Occupied</option>
+                <option value="maintenance">Maintenance</option>
+            </select>
         </div>
 
         <div class="mb-3">
@@ -34,18 +43,8 @@
         </div>
 
         <div class="mb-3">
-            <label>Status</label>
-            <select name="status" class="form-control" required>
-                <option value="free">Free</option>
-                <option value="occupied">Occupied</option>
-                <option value="maintenance">Maintenance</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label>Medical Staff (only if occupied)</label>
-            <select name="medical_staff_id" class="form-control">
-                <option value="">— Select Staff —</option>
+            <label>Medical Staff</label>
+            <select name="medical_staff_ids[]" class="form-control" multiple>
                 @foreach ($staff as $user)
                     <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->user_type }})</option>
                 @endforeach

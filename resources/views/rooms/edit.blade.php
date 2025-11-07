@@ -13,6 +13,11 @@
         </div>
 
         <div class="mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" value="{{ old('name', $room->name) }}" required>
+        </div>
+
+        <div class="mb-3">
             <label>Type</label>
             <select name="type" class="form-control" required>
                 <option value="doctor_season" {{ $room->type === 'doctor_season' ? 'selected' : '' }}>Doctor Season</option>
@@ -21,9 +26,12 @@
         </div>
 
         <div class="mb-3">
-            <label>Capacity</label>
-            <input type="number" name="capacity" class="form-control" value="{{ old('capacity', $room->capacity) }}"
-                required min="1">
+            <label>Status</label>
+            <select name="status" class="form-control">
+                <option value="free" {{ $room->status === 'free' ? 'selected' : '' }}>Free</option>
+                <option value="occupied" {{ $room->status === 'occupied' ? 'selected' : '' }}>Occupied</option>
+                <option value="maintenance" {{ $room->status === 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+            </select>
         </div>
 
         <div class="mb-3">
@@ -38,20 +46,11 @@
         </div>
 
         <div class="mb-3">
-            <label>Status</label>
-            <select name="status" class="form-control" required>
-                <option value="free" {{ $room->status === 'free' ? 'selected' : '' }}>Free</option>
-                <option value="occupied" {{ $room->status === 'occupied' ? 'selected' : '' }}>Occupied</option>
-                <option value="maintenance" {{ $room->status === 'maintenance' ? 'selected' : '' }}>Maintenance</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label>Medical Staff (only if occupied)</label>
-            <select name="medical_staff_id" class="form-control">
-                <option value="">— Select Staff —</option>
+            <label>Medical Staff</label>
+            <select name="medical_staff_ids[]" class="form-control" multiple>
                 @foreach ($staff as $user)
-                    <option value="{{ $user->id }}" {{ $room->medical_staff_id === $user->id ? 'selected' : '' }}>
+                    <option value="{{ $user->id }}"
+                        {{ in_array($user->id, $room->medical_staff_ids ?? []) ? 'selected' : '' }}>
                         {{ $user->name }} ({{ $user->user_type }})
                     </option>
                 @endforeach
@@ -59,5 +58,6 @@
         </div>
 
         <button type="submit" class="btn btn-success">Update Room</button>
+        <a href="{{ route('rooms.index') }}" class="btn btn-secondary ms-2">Cancel</a>
     </form>
 @endsection
