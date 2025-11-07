@@ -53,4 +53,20 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    public function patient(): static
+{
+    return $this->state(fn () => [
+        'user_type' => 'patient',
+        'password' => \Hash::make('patient123'),
+    ]);
+}
+
+public function doctor(): static
+{
+    return $this->state(fn () => [
+        'user_type' => 'doctor',
+        'password' => \Hash::make('doctor123'),
+    ]);
+}
 }

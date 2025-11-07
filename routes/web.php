@@ -1,29 +1,18 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\MedicineCompanyController;
 use App\Http\Controllers\MedicineController;
+use App\Http\Controllers\MedicineDescriptionController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
-
-
-
-Route::get('countries/sync', [CountryController::class, 'sync'])->name('countries.sync');
-
-Route::resource('countries', CountryController::class);
-
-
-Route::resource('medicines', MedicineController::class);
-
+Route::get('/', fn() => view('home'))->name('home');
 
 Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [UserAuthController::class, 'login'])->name('auth.login');
@@ -33,17 +22,28 @@ Route::post('/register', [UserAuthController::class, 'register'])->name('auth.re
 
 Route::post('/logout', [UserAuthController::class, 'logout'])->name('auth.logout');
 
-Route::get('/profile', [UserAuthController::class, 'profile'])->middleware('auth')->name('profile');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [UserAuthController::class, 'profile'])->name('profile');
+
+    Route::resource('medicines', MedicineController::class);
+
+    Route::resource('medicine_descriptions', MedicineDescriptionController::class)->only([
+        'index', 'create', 'store', 'show', 'edit', 'update'
+    ]);
+});
 
 Route::middleware(['admin'])->group(function () {
     Route::resource('countries', CountryController::class);
     Route::get('countries/sync', [CountryController::class, 'sync'])->name('countries.sync');
+
     Route::resource('regions', RegionController::class);
     Route::resource('addresses', AddressController::class);
     Route::resource('hospitals', HospitalController::class);
+
     Route::get('rooms/filter', [RoomController::class, 'filter'])->name('rooms.filter');
     Route::resource('rooms', RoomController::class);
     Route::post('rooms/{room}/release', [RoomController::class, 'release'])->name('rooms.release');
+
     Route::resource('users', UserController::class)->only(['index', 'create', 'store']);
     Route::resource('medicine_companies', MedicineCompanyController::class);
 });

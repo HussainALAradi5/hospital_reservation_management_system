@@ -25,7 +25,7 @@ class MedicineController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|string|max:255',
+            'code' => 'required|string|max:255|unique:medicines,code',
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'quantity' => 'required|integer|min:0',
@@ -33,13 +33,21 @@ class MedicineController extends Controller
             'medicine_company_id' => 'nullable|exists:medicine_companies,id',
         ]);
 
-        Medicine::create($request->all());
+        Medicine::create([
+            'code' => $request->code,
+            'name' => $request->name,
+            'description' => $request->description,
+            'quantity' => $request->quantity,
+            'product_country_id' => $request->product_country_id,
+            'medicine_company_id' => $request->medicine_company_id,
+        ]);
 
         return redirect()->route('medicines.index')->with('success', 'Medicine added successfully.');
     }
 
     public function show(Medicine $medicine)
     {
+        $medicine->load(['country', 'company']);
         return view('medicines.show', compact('medicine'));
     }
 
@@ -53,7 +61,7 @@ class MedicineController extends Controller
     public function update(Request $request, Medicine $medicine)
     {
         $request->validate([
-            'code' => 'required|string|max:255',
+            'code' => 'required|string|max:255|unique:medicines,code,' . $medicine->id,
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'quantity' => 'required|integer|min:0',
@@ -61,7 +69,14 @@ class MedicineController extends Controller
             'medicine_company_id' => 'nullable|exists:medicine_companies,id',
         ]);
 
-        $medicine->update($request->all());
+        $medicine->update([
+            'code' => $request->code,
+            'name' => $request->name,
+            'description' => $request->description,
+            'quantity' => $request->quantity,
+            'product_country_id' => $request->product_country_id,
+            'medicine_company_id' => $request->medicine_company_id,
+        ]);
 
         return redirect()->route('medicines.index')->with('success', 'Medicine updated successfully.');
     }
