@@ -16,14 +16,14 @@ class RoomController extends Controller
     }
 
     public function show($id)
-{
-    $room = Room::with('hospital')->findOrFail($id);
+    {
+        $room = Room::with('hospital')->findOrFail($id);
 
-    $room->last_sign_ins = json_decode($room->last_sign_ins, true) ?? [];
-    $room->sign_outs = json_decode($room->sign_outs, true) ?? [];
+        $room->last_sign_ins = json_decode($room->last_sign_ins, true) ?? [];
+        $room->sign_outs = json_decode($room->sign_outs, true) ?? [];
 
-    return view('rooms.show', compact('room'));
-}
+        return view('rooms.show', compact('room'));
+    }
 
     public function filter(Request $request)
     {
@@ -61,6 +61,11 @@ class RoomController extends Controller
         ]);
 
         $staffIds = $request->medical_staff_ids ?? [];
+
+        if ($request->status === 'occupied' && empty($staffIds)) {
+            return back()->withErrors(['medical_staff_ids' => 'Occupied rooms must have assigned staff.']);
+        }
+
         $signIns = collect($staffIds)->map(fn($id) => [
             'user_id' => $id,
             'timestamp' => now()->toDateTimeString()
@@ -104,6 +109,11 @@ class RoomController extends Controller
         ]);
 
         $newStaff = $request->medical_staff_ids ?? [];
+
+        if ($request->status === 'occupied' && empty($newStaff)) {
+            return back()->withErrors(['medical_staff_ids' => 'Occupied rooms must have assigned staff.']);
+        }
+
         $oldStaff = $room->medical_staff_ids ?? [];
 
         $signOuts = collect($oldStaff)->map(fn($id) => [
