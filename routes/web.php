@@ -41,8 +41,8 @@ Route::middleware(['admin'])->group(function () {
     Route::resource('regions', RegionController::class);
     Route::resource('addresses', AddressController::class);
     Route::resource('hospitals', HospitalController::class);
-    Route::resource('rooms', RoomController::class);
     Route::get('rooms/filter', [RoomController::class, 'filter'])->name('rooms.filter');
+    Route::resource('rooms', RoomController::class);
     Route::post('rooms/{room}/release', [RoomController::class, 'release'])->name('rooms.release');
     Route::resource('users', UserController::class)->only(['index', 'create', 'store']);
     Route::resource('medicine_companies', MedicineCompanyController::class);
