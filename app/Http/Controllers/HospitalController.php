@@ -80,6 +80,11 @@ class HospitalController extends Controller
         return redirect()->route('hospitals.index')->with('success', 'Hospital updated successfully.');
     }
 
+    public function show($id)
+{
+    $hospital = Hospital::with('rooms')->findOrFail($id);
+    return view('hospitals.show', compact('hospital'));
+}
     public function destroy(Hospital $hospital)
     {
         $hospital->delete();
