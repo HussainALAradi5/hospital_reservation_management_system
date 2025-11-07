@@ -23,7 +23,7 @@
 - **Laravel** (PHP Framework)  
 - **Bootstrap** (Styling)  
 - **MySQL** (Database)  
-- **Country API** (For region & address mapping)
+- **Country API** 
 
 ---
 
