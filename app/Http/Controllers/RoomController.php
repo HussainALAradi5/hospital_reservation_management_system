@@ -15,6 +15,16 @@ class RoomController extends Controller
         return view('rooms.index', compact('rooms'));
     }
 
+    public function show($id)
+{
+    $room = Room::with('hospital')->findOrFail($id);
+
+    $room->last_sign_ins = json_decode($room->last_sign_ins, true) ?? [];
+    $room->sign_outs = json_decode($room->sign_outs, true) ?? [];
+
+    return view('rooms.show', compact('room'));
+}
+
     public function filter(Request $request)
     {
         $query = Room::with('hospital');

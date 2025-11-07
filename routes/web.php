@@ -46,5 +46,4 @@ Route::middleware(['admin'])->group(function () {
     Route::post('rooms/{room}/release', [RoomController::class, 'release'])->name('rooms.release');
     Route::resource('users', UserController::class)->only(['index', 'create', 'store']);
     Route::resource('medicine_companies', MedicineCompanyController::class);
-
 });

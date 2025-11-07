@@ -22,7 +22,7 @@ return new class extends Migration
             $table->char('gender_type');
             $table->boolean('is_married');
             $table->foreignId('hospital_id')->nullable()->constrained()->onDelete('set null');
-            $table->enum('user_type', ['patient','doctor','nurse','pharmancy','admin'])->default('patient');
+            $table->enum('user_type', ['patient','doctor','nurse','pharmacist','admin'])->default('patient');
             $table->rememberToken();
             $table->timestamps();
         });
