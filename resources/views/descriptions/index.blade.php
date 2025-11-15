@@ -5,7 +5,7 @@
 
     @if (in_array(auth()->user()->user_type, ['doctor', 'admin']))
         <div class="mb-3 text-center">
-            <a href="{{ route('medicine_descriptions.create') }}" class="btn btn-primary">Add Description</a>
+            <a href="{{ route('descriptions.create') }}" class="btn btn-primary">Add Description</a>
         </div>
     @endif
 
@@ -21,6 +21,7 @@
                 @endif
                 <th>Quantity</th>
                 <th>Days</th>
+                <th>Status</th>
                 <th>Hospital</th>
                 <th>Actions</th>
             </tr>
@@ -37,11 +38,12 @@
                     @endif
                     <td>{{ $desc->quantity }}</td>
                     <td>{{ $desc->number_of_days }}</td>
+                    <td>{{ ucfirst(str_replace('_', ' ', $desc->status)) }}</td>
                     <td>{{ $desc->hospital->name ?? '—' }}</td>
                     <td>
-                        <a href="{{ route('medicine_descriptions.show', $desc) }}" class="btn btn-sm btn-info">View</a>
+                        <a href="{{ route('descriptions.show', $desc) }}" class="btn btn-sm btn-info">View</a>
                         @if (in_array(auth()->user()->user_type, ['doctor', 'admin']))
-                            <a href="{{ route('medicine_descriptions.edit', $desc) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('descriptions.edit', $desc) }}" class="btn btn-sm btn-warning">Edit</a>
                         @endif
                     </td>
                 </tr>

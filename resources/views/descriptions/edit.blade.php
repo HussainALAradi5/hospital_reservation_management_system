@@ -3,34 +3,34 @@
 @section('content')
     <h2 class="mb-4">Edit Medicine Description</h2>
 
-    <form method="POST" action="{{ route('medicine_descriptions.update', $medicineDescription) }}" class="row g-3">
+    <form method="POST" action="{{ route('descriptions.update', $description) }}" class="row g-3">
         @csrf @method('PUT')
 
         <div class="col-md-6">
             <label class="form-label">Name</label>
-            <input type="text" name="name" class="form-control" value="{{ $medicineDescription->name }}" required>
+            <input type="text" name="name" class="form-control" value="{{ $description->name }}" required>
         </div>
 
         <div class="col-12">
             <label class="form-label">Description</label>
-            <textarea name="description" class="form-control" rows="3">{{ $medicineDescription->description }}</textarea>
+            <textarea name="description" class="form-control" rows="3">{{ $description->description }}</textarea>
         </div>
 
         <div class="col-md-4">
             <label class="form-label">Quantity</label>
-            <input type="number" name="quantity" class="form-control" value="{{ $medicineDescription->quantity }}" required>
+            <input type="number" name="quantity" class="form-control" value="{{ $description->quantity }}" required>
         </div>
 
         <div class="col-md-4">
             <label class="form-label">Number of Days</label>
-            <input type="number" name="number_of_days" class="form-control" value="{{ $medicineDescription->number_of_days }}" required>
+            <input type="number" name="number_of_days" class="form-control" value="{{ $description->number_of_days }}" required>
         </div>
 
         <div class="col-md-4">
             <label class="form-label">Medicine</label>
             <select name="medicine_id" class="form-select" required>
                 @foreach ($medicines as $med)
-                    <option value="{{ $med->id }}" @selected($med->id == $medicineDescription->medicine_id)>
+                    <option value="{{ $med->id }}" @selected($med->id == $description->medicine_id)>
                         {{ $med->name }}
                     </option>
                 @endforeach
@@ -39,9 +39,9 @@
 
         <div class="col-md-6">
             <label class="form-label">Patient</label>
-            <select name="writed_for_user_id" class="form-select" required>
+            <select name="written_for_user_id" class="form-select" required>
                 @foreach ($patients as $user)
-                    <option value="{{ $user->id }}" @selected($user->id == $medicineDescription->writed_for_user_id)>
+                    <option value="{{ $user->id }}" @selected($user->id == $description->written_for_user_id)>
                         {{ $user->name }}
                     </option>
                 @endforeach
@@ -52,10 +52,19 @@
             <label class="form-label">Hospital</label>
             <select name="hospital_id" class="form-select" required>
                 @foreach ($hospitals as $hospital)
-                    <option value="{{ $hospital->id }}" @selected($hospital->id == $medicineDescription->hospital_id)>
+                    <option value="{{ $hospital->id }}" @selected($hospital->id == $description->hospital_id)>
                         {{ $hospital->name }}
                     </option>
                 @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select" required>
+                <option value="pending" @selected($description->status === 'pending')>Pending</option>
+                <option value="in_progress" @selected($description->status === 'in_progress')>In Progress</option>
+                <option value="done" @selected($description->status === 'done')>Done</option>
             </select>
         </div>
 

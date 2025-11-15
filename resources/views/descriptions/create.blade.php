@@ -3,7 +3,7 @@
 @section('content')
     <h2 class="mb-4">Write Medicine Description</h2>
 
-    <form method="POST" action="{{ route('medicine_descriptions.store') }}" class="row g-3">
+    <form method="POST" action="{{ route('descriptions.store') }}" class="row g-3">
         @csrf
 
         <div class="col-md-6">
@@ -43,7 +43,7 @@
 
         <div class="col-md-6">
             <label class="form-label">Patient</label>
-            <select name="writed_for_user_id" class="form-select" required>
+            <select name="written_for_user_id" class="form-select" required>
                 <option value="">Select</option>
                 @foreach ($patients as $user)
                     <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -58,6 +58,15 @@
                 @foreach ($hospitals as $hospital)
                     <option value="{{ $hospital->id }}">{{ $hospital->name }}</option>
                 @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select" required>
+                <option value="pending">Pending</option>
+                <option value="in_progress">In Progress</option>
+                <option value="done">Done</option>
             </select>
         </div>
 

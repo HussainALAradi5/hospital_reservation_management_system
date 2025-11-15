@@ -11,6 +11,7 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DescriptionController; // ✅ NEW
 
 Route::get('/', fn() => view('home'))->name('home');
 
@@ -27,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('medicines', MedicineController::class);
 
-    Route::resource('medicine_descriptions', MedicineDescriptionController::class)->only([
+    Route::resource('descriptions', DescriptionController::class)->only([
         'index', 'create', 'store', 'show', 'edit', 'update'
     ]);
 });
