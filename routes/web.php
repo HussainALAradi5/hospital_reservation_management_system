@@ -6,12 +6,12 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\MedicineCompanyController;
 use App\Http\Controllers\MedicineController;
-use App\Http\Controllers\MedicineDescriptionController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\DescriptionController; // ✅ NEW
+use App\Http\Controllers\DescriptionController;
+use App\Http\Controllers\AppointmentController; 
 
 Route::get('/', fn() => view('home'))->name('home');
 
@@ -31,6 +31,13 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('descriptions', DescriptionController::class)->only([
         'index', 'create', 'store', 'show', 'edit', 'update'
     ]);
+
+    Route::resource('appointments', AppointmentController::class)->only([
+        'index', 'create', 'store', 'show', 'edit', 'update'
+    ]);
+
+    Route::get('/appointments/doctor', [AppointmentController::class, 'doctorAppointments'])->name('appointments.doctor');
+    Route::get('/appointments/my', [AppointmentController::class, 'myAppointments'])->name('appointments.my');
 });
 
 Route::middleware(['admin'])->group(function () {
