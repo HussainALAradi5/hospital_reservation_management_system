@@ -27,9 +27,7 @@
                     @endif
 
                     {{-- Medicine Descriptions for all roles except nurse --}}
-                    @if (Auth::user()->user_type !== 'nurse')
-                        <li class="nav-item"><a class="nav-link text-info fw-semibold" href="{{ route('medicine_descriptions.index') }}">My Prescriptions</a></li>
-                    @endif
+                   
 
                     {{-- Profile and Logout --}}
                     <li class="nav-item"><a class="nav-link text-light" href="{{ route('profile') }}">Profile</a></li>
